@@ -4,7 +4,7 @@ import sys
 from bleak import BleakScanner, BleakClient
 
 # --- Match these exactly to your ESP32 C++ code ---
-DEVICE_NAME = "ESP32_Controller_1"
+DEVICE_NAME = "AXE3_left"  #AXE3_right, or AXE3_left
 CHAR_UUID_ANGLE = "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 CHAR_UUID_QUAT  = "828917c1-ea55-4d4a-a66e-fd202cea0645"
 CHAR_UUID_JOY   = "9c661337-b499-497d-aa5b-0105316e6e22"

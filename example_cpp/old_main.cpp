@@ -6,35 +6,17 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
-// =======================================================
-// CONFIGURATION FLAG: Choose Left or Right Handle
-// Uncomment ONE of the following lines before uploading:
-// =======================================================
-#define BUILD_LEFT_HANDLE
-//#define BUILD_RIGHT_HANDLE
-
-// --- BLE UUIDs & Names applied dynamically based on your choice above ---
-#ifdef BUILD_LEFT_HANDLE
-  #define DEVICE_NAME               "AXE4_left"
-  #define SERVICE_UUID              "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-  #define CHARACTERISTIC_UUID_ANGLE "beb5483e-36e1-4688-b7f5-ea07361b26a8"
-  #define CHARACTERISTIC_UUID_QUAT  "828917c1-ea55-4d4a-a66e-fd202cea0645"
-  #define CHARACTERISTIC_UUID_JOY   "9c661337-b499-497d-aa5b-0105316e6e22" 
-#elif defined(BUILD_RIGHT_HANDLE)
-  #define DEVICE_NAME               "AXE4_right"
-  #define SERVICE_UUID              "5cb0d312-2fc6-46a0-9ed1-d6d0d442825c"
-  #define CHARACTERISTIC_UUID_ANGLE "d1a68735-86b2-4d26-b8f2-1b633075c3f9"
-  #define CHARACTERISTIC_UUID_QUAT  "f3c83012-78d1-4e96-a14a-7bc991060932"
-  #define CHARACTERISTIC_UUID_JOY   "2a8497d5-d852-4f01-90a6-16e51141bc25"
-#else
-  #error "You must define either BUILD_LEFT_HANDLE or BUILD_RIGHT_HANDLE at the top of the code!"
-#endif
-// =======================================================
+// --- BLE UUIDs ---
+#define SERVICE_UUID              "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID_ANGLE "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define CHARACTERISTIC_UUID_QUAT  "828917c1-ea55-4d4a-a66e-fd202cea0645"
+#define CHARACTERISTIC_UUID_JOY   "9c661337-b499-497d-aa5b-0105316e6e22" 
 
 BLEServer* pServer = NULL;
 BLECharacteristic* pCharAngle = NULL;
 BLECharacteristic* pCharQuat = NULL;
 BLECharacteristic* pCharJoy = NULL;
+String device_name = "AXE3_left";
 
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
@@ -142,9 +124,7 @@ void setup()
 {
   Serial.begin(115200);
   while (!Serial) { delay(10); }
-  
-  // Print which handle is booting up to the serial monitor for easy debugging
-  Serial.printf("\n--- USB CONNECTED: %s ---\n", DEVICE_NAME);
+  Serial.println("\n--- USB CONNECTED ---");
 
   // 1. Initialize Joystick/Trigger Pins & Calibrate
   pinMode(PIN_SW, INPUT_PULLUP);
@@ -158,7 +138,7 @@ void setup()
   
   // 3. Initialize BLE
   Serial.println("Initializing BLE Server...");
-  BLEDevice::init(DEVICE_NAME); // Uses the defined name
+  BLEDevice::init(device_name.c_str());
   pServer = BLEDevice::createServer();
   pServer->setCallbacks(new MyServerCallbacks());
 
